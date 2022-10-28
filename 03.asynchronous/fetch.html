@@ -4,9 +4,11 @@
     return response.text();
   }
 
-  makeRequest('https://bootcamp.fjord.jp').then(html => {
-    console.log(html);
-  }).catch(error => {
-    console.log(error);
-  })
+  makeRequest("https://bootcamp.fjord.jp")
+    .then((html) => {
+      console.log(html);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 </script>
