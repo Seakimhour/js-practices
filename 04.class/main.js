@@ -8,8 +8,4 @@ if (ARGV.l) Memo.list();
 else if (ARGV.r) Memo.show();
 else if (ARGV.d) Memo.remove();
 else if (ARGV.e) Memo.edit();
-else {
-  process.stdin.once("data", function (data) {
-    Memo.create(data.toString());
-  });
-}
+else process.stdin.once("data", data => Memo.create(data.toString()));

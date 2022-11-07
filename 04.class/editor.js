@@ -2,11 +2,13 @@ const fs = require("node:fs/promises");
 const { spawn } = require("child_process");
 
 module.exports = class Editor {
-  static open(file) {
+  static #TEMP_FILE = "TEMP.txt";
+
+  static #open() {
     return new Promise((resolve, reject) => {
-      spawn("vi", [file], { stdio: "inherit" }).on("exit", (code) => {
+      spawn("vi", [this.#TEMP_FILE], { stdio: "inherit" }).on("exit", (code) => {
         if (code === 0) {
-          resolve(file);
+          resolve();
         } else {
           reject(new Error(`vi had non zero exit code: ${code}`));
         }
@@ -15,13 +17,12 @@ module.exports = class Editor {
   }
 
   static edit(originalContent) {
-    const TEMP_FILE = "TEMP.txt";
     return fs
-      .appendFile(TEMP_FILE, originalContent)
-      .then(() => this.open(TEMP_FILE))
-      .then(() => fs.readFile(TEMP_FILE))
+      .appendFile(this.#TEMP_FILE, originalContent)
+      .then(() => this.#open())
+      .then(() => fs.readFile(this.#TEMP_FILE))
       .then((newContent) =>
-        fs.unlink(TEMP_FILE).then(() => newContent.toString())
+        fs.unlink(this.#TEMP_FILE).then(() => newContent.toString())
       );
   }
 };

@@ -9,7 +9,7 @@ module.exports = class Memo {
     db.close();
   }
 
-  static getMemoList() {
+  static #getMemoList() {
     return new Promise((resolve, reject) => {
       db.all("SELECT rowid, name, content FROM memo", (err, memos) => {
         if (err) {
@@ -21,7 +21,7 @@ module.exports = class Memo {
     });
   }
 
-  static selectMemo(message, choices) {
+  static #selectMemo(message, choices) {
     return new Select({
       name: "select",
       message: message,
@@ -44,34 +44,34 @@ module.exports = class Memo {
   }
 
   static show() {
-    this.getMemoList()
-      .then((memos) => this.selectMemo("Choose a note you want to see:", memos))
+    this.#getMemoList()
+      .then((memos) => this.#selectMemo("Choose a note you want to see:", memos))
       .then((memo) => console.log(memo.content))
       .finally(() => db.close());
   }
 
   static remove() {
-    this.getMemoList()
+    this.#getMemoList()
       .then((memos) =>
-        this.selectMemo("Choose a note you want to delete:", memos)
+        this.#selectMemo("Choose a note you want to delete:", memos)
       )
       .then((memo) => db.run("DELETE FROM memo WHERE rowid = ?", memo.rowid))
       .finally(() => db.close());
   }
 
   static edit() {
-    this.getMemoList()
+    this.#getMemoList()
       .then((memos) =>
-        this.selectMemo("Choose a note you want to edit:", memos)
+        this.#selectMemo("Choose a note you want to edit:", memos)
       )
       .then((memo) =>
         Editor.edit(memo.content).then((newContent) =>
-          this.update(memo.rowid, newContent)
+          this.#update(memo.rowid, newContent)
         )
       );
   }
 
-  static update(id, content) {
+  static #update(id, content) {
     let name = content.split("\n")[0];
     db.run(
       "UPDATE memo SET name = ?, content = ? WHERE rowid = ?",
