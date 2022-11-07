@@ -2,8 +2,8 @@ const minimist = require("minimist");
 
 const today = new Date();
 const argv = minimist(process.argv.slice(2));
-const year = argv["y"] || today.getFullYear();
-const month = argv["m"] || today.getMonth() + 1;
+const year = argv.y || today.getFullYear();
+const month = argv.m || today.getMonth() + 1;
 const days_in_month = new Date(year, month, 0).getDate();
 
 let current_week_day = new Date(year, month - 1).getDay();
