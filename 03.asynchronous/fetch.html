@@ -1,0 +1,14 @@
+<script>
+  async function makeRequest(url) {
+    const response = await fetch(url);
+    return response.text();
+  }
+
+  makeRequest("https://bootcamp.fjord.jp")
+    .then((html) => {
+      console.log(html);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+</script>
