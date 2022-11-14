@@ -2,9 +2,9 @@ const fs = require("node:fs/promises");
 const { spawn } = require("child_process");
 
 module.exports = class Editor {
-  static #TEMP_FILE = "TEMP.txt";
+  #TEMP_FILE = "TEMP.txt";
 
-  static #open() {
+  #open() {
     return new Promise((resolve, reject) => {
       spawn("vi", [this.#TEMP_FILE], { stdio: "inherit" }).on(
         "exit",
@@ -19,7 +19,7 @@ module.exports = class Editor {
     });
   }
 
-  static edit(originalContent) {
+  edit(originalContent) {
     return fs
       .appendFile(this.#TEMP_FILE, originalContent)
       .then(() => this.#open())

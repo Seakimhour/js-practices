@@ -4,7 +4,7 @@ const Memo = require("./memo.js");
 const minimist = require("minimist");
 const ARGV = minimist(process.argv.slice(2));
 
-let memo_app = new Memo();
+const memo_app = new Memo();
 
 if (ARGV.l) memo_app.list();
 else if (ARGV.r) memo_app.show();

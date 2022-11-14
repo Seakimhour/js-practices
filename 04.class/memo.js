@@ -59,11 +59,13 @@ module.exports = class Memo {
   edit() {
     this.#getMemoList()
       .then((memos) => this.#selectMemo("Choose a note you want to edit:", memos))
-      .then((memo) =>
-        Editor.edit(memo.content).then((newContent) =>
+      .then((memo) => {
+        const editor = new Editor();
+        editor.edit(memo.content).then((newContent) =>
           this.#update(memo.rowid, newContent)
         )
-      );
+      }
+    );
   }
 
   #update(id, content) {
