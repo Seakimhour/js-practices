@@ -4,8 +4,10 @@ const Memo = require("./memo.js");
 const minimist = require("minimist");
 const ARGV = minimist(process.argv.slice(2));
 
-if (ARGV.l) Memo.list();
-else if (ARGV.r) Memo.show();
-else if (ARGV.d) Memo.remove();
-else if (ARGV.e) Memo.edit();
-else process.stdin.once("data", data => Memo.create(data.toString()));
+let memo_app = new Memo();
+
+if (ARGV.l) memo_app.list();
+else if (ARGV.r) memo_app.show();
+else if (ARGV.d) memo_app.remove();
+else if (ARGV.e) memo_app.edit();
+else process.stdin.once("data", (data) => memo_app.create(data.toString()));

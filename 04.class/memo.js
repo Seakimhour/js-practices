@@ -6,10 +6,9 @@ const Editor = require("./editor.js");
 module.exports = class Memo {
   constructor() {
     db.run("CREATE TABLE IF NOT EXISTS memo (name TEXT, content TEXT)");
-    db.close();
   }
 
-  static #getMemoList() {
+  #getMemoList() {
     return new Promise((resolve, reject) => {
       db.all("SELECT rowid, name, content FROM memo", (err, memos) => {
         if (err) {
@@ -21,7 +20,7 @@ module.exports = class Memo {
     });
   }
 
-  static #selectMemo(message, choices) {
+  #selectMemo(message, choices) {
     return new Select({
       name: "select",
       message: message,
@@ -32,38 +31,34 @@ module.exports = class Memo {
     }).run();
   }
 
-  static create(content) {
-    let name = content.split("\n")[0];
+  create(content) {
+    const name = content.split("\n")[0];
     db.run("INSERT INTO memo VALUES (?,?)", name, content);
     db.close();
   }
 
-  static list() {
+  list() {
     db.each("SELECT name FROM memo", (err, memo) => console.log(memo.name));
     db.close();
   }
 
-  static show() {
+  show() {
     this.#getMemoList()
       .then((memos) => this.#selectMemo("Choose a note you want to see:", memos))
       .then((memo) => console.log(memo.content))
       .finally(() => db.close());
   }
 
-  static remove() {
+  remove() {
     this.#getMemoList()
-      .then((memos) =>
-        this.#selectMemo("Choose a note you want to delete:", memos)
-      )
+      .then((memos) => this.#selectMemo("Choose a note you want to delete:", memos))
       .then((memo) => db.run("DELETE FROM memo WHERE rowid = ?", memo.rowid))
       .finally(() => db.close());
   }
 
-  static edit() {
+  edit() {
     this.#getMemoList()
-      .then((memos) =>
-        this.#selectMemo("Choose a note you want to edit:", memos)
-      )
+      .then((memos) => this.#selectMemo("Choose a note you want to edit:", memos))
       .then((memo) =>
         Editor.edit(memo.content).then((newContent) =>
           this.#update(memo.rowid, newContent)
@@ -71,8 +66,8 @@ module.exports = class Memo {
       );
   }
 
-  static #update(id, content) {
-    let name = content.split("\n")[0];
+  #update(id, content) {
+    const name = content.split("\n")[0];
     db.run(
       "UPDATE memo SET name = ?, content = ? WHERE rowid = ?",
       name,

@@ -6,13 +6,16 @@ module.exports = class Editor {
 
   static #open() {
     return new Promise((resolve, reject) => {
-      spawn("vi", [this.#TEMP_FILE], { stdio: "inherit" }).on("exit", (code) => {
-        if (code === 0) {
-          resolve();
-        } else {
-          reject(new Error(`vi had non zero exit code: ${code}`));
+      spawn("vi", [this.#TEMP_FILE], { stdio: "inherit" }).on(
+        "exit",
+        (code) => {
+          if (code === 0) {
+            resolve();
+          } else {
+            reject(new Error(`vi had non zero exit code: ${code}`));
+          }
         }
-      });
+      );
     });
   }
 
