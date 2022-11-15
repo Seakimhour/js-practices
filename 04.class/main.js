@@ -1,10 +1,10 @@
 #! /usr/bin/env node
 
-const Memo = require("./memo.js");
+const MemoApp = require("./memo_app.js");
 const minimist = require("minimist");
 const ARGV = minimist(process.argv.slice(2));
 
-const memo_app = new Memo();
+const memo_app = new MemoApp("db.sqlite3", "temp.txt");
 
 if (ARGV.l) memo_app.list();
 else if (ARGV.r) memo_app.show();
